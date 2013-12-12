@@ -33,6 +33,8 @@ title_prefix = 'InfoQ中国站'
 date_regexes = [
     r'一月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
     r'二月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
+    r'\s一月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
+    r'\s二月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
     r'三月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
     r'四月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
     r'五月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
@@ -43,6 +45,8 @@ date_regexes = [
     r'十月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
     r'十一月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
     r'十二月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})'
+    r'\s十一月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})',
+    r'\s十二月\s+(?P<day>\d{2}),\s+(?P<year>\d{4})'
 ]
 '''
 
@@ -173,6 +177,12 @@ class InfoQ(BasicNewsRecipe):
                     date_text = str(author_span.contents[-1])
                     item['date'] = parse_date(date_text)
                     
+                    date_text_try = str(author_span.contents[-3])   # bug due to comments added
+                    date_try = parse_date(date_text)
+                    if not date_try:
+                        date_try = parse_date(date_text_try)
+                    item['date'] = date_try
+
                     print '>>> Item parsed: ', item
                     
                     yield item
